@@ -2,8 +2,7 @@ function main(filename)
     total::Int32 = 0
     open(filename, "r") do io
         for line in eachline(io)
-            prefix, rounds = split(line, ":")
-            game_id = parse(UInt32, replace(prefix, ("Game" => ""), (" " => "")))
+            _, rounds = split(line, ":")
 
             rounds = [ strip(r) for r in split(rounds, ";") ]
             selections = [ split(strip(s), " ") for r in rounds for s in split(r, ",") ]
@@ -31,5 +30,5 @@ end
 if length(ARGS) < 1
     println("usage: ", PROGRAM_FILE, " <input>")
 else
-    main(ARGS[1])
+    @time main(ARGS[1])
 end
