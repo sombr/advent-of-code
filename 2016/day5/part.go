@@ -89,4 +89,10 @@ func main() {
 		User time (seconds): 19.32
         System time (seconds): 0.17
         Percent of CPU this job got: 103%
+
+		gcc-go -O3 -march=native, this is even worse for some reason
+
+		User time (seconds): 53.73
+        System time (seconds): 1.48
+        Percent of CPU this job got: 111%
 */
