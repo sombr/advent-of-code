@@ -2,8 +2,10 @@ package main
 
 import (
 	"crypto/md5"
+	"encoding/hex"
 	"fmt"
 	"io"
+	"strconv"
 	"strings"
 )
 
@@ -15,9 +17,11 @@ func find_code(input string) string {
 	salt := 0
 	code := make([]byte, 0, 8)
 	for len(code) < 8 {
-		in := fmt.Sprintf("%s%d", input, salt)
-		io.WriteString(h, in)
-		hash := fmt.Sprintf("%x", h.Sum(nil))
+		io.WriteString(h, input)
+		io.WriteString(h, strconv.Itoa(salt))
+
+		hash_bin := h.Sum(nil)
+		hash := hex.EncodeToString(hash_bin[:3])
 
 		if strings.HasPrefix(hash, "00000") {
 			code = append(code, hash[5])
@@ -35,23 +39,21 @@ func find_code2(input string) string {
 
 	salt := 0
 	code := make([]byte, 8)
-	var found byte = 0
 	foundCount := 0
 
-	for found != 255 {
-		in := fmt.Sprintf("%s%d", input, salt)
-		io.WriteString(h, in)
-		hash := fmt.Sprintf("%x", h.Sum(nil))
+	for foundCount < 8 {
+		io.WriteString(h, input)
+		io.WriteString(h, strconv.Itoa(salt))
+
+		hash_bin := h.Sum(nil)
+		hash := hex.EncodeToString(hash_bin[:4])
 
 		if strings.HasPrefix(hash, "00000") {
 			if hash[5] >= '0' && hash[5] < '8' {
 				idx := hash[5] - '0'
-				isFound := (found & (1 << idx)) != 0
-				if !isFound {
-					found = found | (1 << idx)
+				if code[idx] == 0 {
 					code[idx] = hash[6]
 					foundCount++
-					//fmt.Printf("found: %d at salt: %d -- code:%v, hash:%s mask:%d\n", foundCount, salt, code, hash, found)
 				}
 			}
 		}
@@ -68,3 +70,23 @@ func main() {
 	fmt.Println("part1 >>", find_code(INPUT))
 	fmt.Println("part2 >>", find_code2(INPUT))
 }
+
+/*
+		Go 1.23.2 GOAMD64=v1
+
+        User time (seconds): 42.17
+        System time (seconds): 0.48
+        Percent of CPU this job got: 104%
+
+		v2
+
+		User time (seconds): 41.95
+        System time (seconds): 0.47
+        Percent of CPU this job got: 104%
+
+		v3 + optimizations of string formatting, it looks like they are super slow
+
+		User time (seconds): 19.32
+        System time (seconds): 0.17
+        Percent of CPU this job got: 103%
+*/

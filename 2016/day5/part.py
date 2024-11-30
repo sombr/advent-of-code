@@ -7,10 +7,10 @@ def find_code(seed):
     code = []
     while len(code) < 8:
         h = hashlib.md5()
-        joint = (seed + str(salt)).encode("utf8")
+        h.update(seed)
+        h.update(str(salt).encode("utf-8"))
 
-        h.update(joint)
-        hash = h.hexdigest()
+        hash = h.digest()[:4].hex()
 
         if hash.startswith("00000"):
             code.append(hash[5])
@@ -25,10 +25,10 @@ def find_code2(seed):
 
     while found < 8:
         h = hashlib.md5()
-        joint = (seed + str(salt)).encode("utf8")
+        h.update(seed)
+        h.update(str(salt).encode("utf-8"))
 
-        h.update(joint)
-        hash = h.hexdigest()
+        hash = h.digest()[:4].hex()
 
         if hash.startswith("00000"):
             idx = ord(hash[5]) - ord('0')
@@ -41,12 +41,26 @@ def find_code2(seed):
     return "".join(code)
 
 def main():
-    test = find_code("abc")
-    part1 = find_code("cxdnnyjw")
-    part2 = find_code2("cxdnnyjw")
+    test = find_code(b"abc")
+    part1 = find_code(b"cxdnnyjw")
+    part2 = find_code2(b"cxdnnyjw")
 
     print(f"test >> {test}")
     print(f"part1 >> {part1}")
     print(f"part2 >> {part2}")
 
 main()
+
+# binary - python3 3.12.5
+#
+#         User time (seconds): 32.94
+#         System time (seconds): 0.00
+#         Percent of CPU this job got: 99%
+#
+# binary - pypy3 7.3.17
+#
+#        User time (seconds): 111.73
+#        System time (seconds): 0.04
+#        Percent of CPU this job got: 99%
+#
+# Python3 won both pypy3 and go, that's crazy and exciting
