@@ -9,6 +9,8 @@ DIRECTION = [
     (0, -1),
 ]
 
+DIRLEN = len(DIRECTION)
+
 def load_state(filename):
     guard = None
     state = []
@@ -33,13 +35,13 @@ def load_state(filename):
     
     return guard, state
 
-def run_sim(guard, state):
+def run_sim(guard, state, rows, cols, track_points = True):
     positions = set([ guard ])
     points = set()
 
     is_loop = False
     while True:
-        new_guard = make_step(guard, state)
+        new_guard = make_step(guard, state, rows, cols)
         if new_guard is None:
             break
 
@@ -51,39 +53,41 @@ def run_sim(guard, state):
 
         positions.add(guard)
 
-        _, gr, gc = guard
-        points.add( (gr, gc) )
+        if track_points:
+            _, gr, gc = guard
+            points.add( (gr, gc) )
 
     return is_loop, points
 
 
-def make_step(guard, state):
+def make_step(guard, state, rows, cols):
     next_guard = None
     direction, gr, gc = guard
 
     dr, dc = DIRECTION[direction]
     nr, nc = gr+dr, gc+dc
 
-    if nr < 0 or nc < 0 or nr >= len(state) or nc >= len(state[gr]):
+    if nr < 0 or nc < 0 or nr >= rows or nc >= cols:
         return next_guard
     
     if state[nr][nc] >= 0:
         state[nr][nc] = 1
         next_guard = (direction, nr, nc)
     else:
-        ndir = (direction + 1) % len(DIRECTION)
+        ndir = (direction + 1) % DIRLEN
         next_guard = (ndir, gr, gc)
         
     return next_guard
 
 def main():
     guard, state = load_state(sys.argv[1])
-    is_loop, candidates = run_sim(guard, state)
+    rows, cols = len(state), len(state[0])
+    is_loop, candidates = run_sim(guard, state, rows, cols)
 
     succussful_loops = 0
     for cr, cc in candidates:
         state[cr][cc] = -1
-        now_loop, _ = run_sim(guard, state)
+        now_loop, _ = run_sim(guard, state, rows, cols, track_points = False)
         state[cr][cc] = 0
 
         if now_loop:
