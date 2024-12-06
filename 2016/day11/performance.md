@@ -36,3 +36,18 @@
     Minor (reclaiming a frame) page faults: 1822997
     Voluntary context switches: 1
     Involuntary context switches: 8738
+
+## Fast (binary) Python (7.5x faster!)
+
+    User time (seconds): 182.26
+    System time (seconds): 1.09
+    Percent of CPU this job got: 99%
+    Elapsed (wall clock) time (h:mm:ss or m:ss): 3:03.42
+
+
+## Fast (binary) Pypy (3.37x faster than the Fast Python, 7x faster than the slow Pypy, 25x faster than the slow Python)
+
+    User time (seconds): 54.60
+    System time (seconds): 1.98
+    Percent of CPU this job got: 99%
+    Elapsed (wall clock) time (h:mm:ss or m:ss): 0:56.60
