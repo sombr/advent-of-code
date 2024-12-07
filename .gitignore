@@ -1,4 +1,5 @@
 */*/input*.txt
 */*/*.txt
 */*/*.prof
+*/*/*.class
 .vscode
