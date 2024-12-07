@@ -72,7 +72,7 @@ class part {
             }
         }
 
-        return -1;
+        return visited.size();
     }
 
     public static void main(String args[]) {
