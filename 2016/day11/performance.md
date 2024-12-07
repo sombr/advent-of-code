@@ -44,6 +44,12 @@
     Percent of CPU this job got: 99%
     Elapsed (wall clock) time (h:mm:ss or m:ss): 3:03.42
 
+### Pythonista on an iPad:
+
+    >>> ELAPSED 120.86144995689392sec
+
+    Faster than a Threadripper CPU. Oh well.
+
 
 ## Fast (binary) Pypy (3.37x faster than the Fast Python, 7x faster than the slow Pypy, 25x faster than the slow Python)
 
