@@ -39,8 +39,6 @@ def count_assemble(pattern, towels, mem):
 
         count += c1*c2
 
-        print(f"{pattern} :: {p1}:{c1} -- {p2}:{c2} -- {c1*c2} -- {count}")
-
     mem[pattern] = count
     return mem[pattern]
 
@@ -48,23 +46,12 @@ def main():
     towels, patterns = load_data(sys.argv[1])
     mem = {}
 
-    print(towels, patterns)
-
-    c = count_assemble("gbbr", towels, mem)
-    print(">>> ", c)
-
-    exit(1)
-
-    variations = 0
     count = 0
     for p in patterns:
         c = count_assemble(p, towels, mem)
         if c > 0:
             count += 1
-            variations += c
-        print(f"{p} -- {c}")
 
     print(f"part1 >> {count}")
-    print(f"part2 >> {variations}")
 
 main()
