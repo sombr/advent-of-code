@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import sys
+from functools import cache
 
 def load_data(filename):
     towel = None
@@ -14,44 +15,31 @@ def load_data(filename):
                 patterns.append(line)
     return towel, patterns
 
-def count_assemble(pattern, towels, mem):
-    if pattern in mem:
-        return mem[pattern]
-
-    if len(pattern) < 1:
-        return 0
-
-    if len(pattern) == 1:
-        if pattern in towels:
-            return 1
-        else:
-            return 0
+@cache
+def find_compositions(p, towels):
+    if p == "":
+        return 1
 
     count = 0
-    if pattern in towels:
-        count = 1
+    for t in towels:
+        if p.startswith(t):
+            prefix = len(t)
+            count += find_compositions(p[prefix:], towels)
 
-    for idx in range(1, len(pattern)):
-        p1, p2 = pattern[:idx], pattern[idx:]
-
-        c1 = count_assemble(p1, towels, mem)
-        c2 = count_assemble(p2, towels, mem)
-
-        count += c1*c2
-
-    mem[pattern] = count
-    return mem[pattern]
+    return count
 
 def main():
     towels, patterns = load_data(sys.argv[1])
-    mem = {}
 
-    count = 0
+    possible = 0
+    total = 0
     for p in patterns:
-        c = count_assemble(p, towels, mem)
-        if c > 0:
-            count += 1
+        count = find_compositions(p, tuple(towels))
+        total += count
+        if count > 0:
+            possible += 1
 
-    print(f"part1 >> {count}")
+    print(f"part1 >> {possible}")
+    print(f"part2 >> {total}")
 
 main()
