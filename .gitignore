@@ -2,4 +2,7 @@
 */*/*.txt
 */*/*.prof
 */*/*.class
+*/*/part
+*/*/part1
+*/*/part2
 .vscode
